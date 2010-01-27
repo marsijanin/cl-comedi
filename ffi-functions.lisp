@@ -36,6 +36,11 @@
   (channel   :unsigned-int)
   (range     :unsigned-int))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defsyscall (%get-n-ranges "comedi_get_n_ranges") :int
+  (device    :pointer)                  ;comedi_t *
+  (subdevice :unsigned-int)
+  (channel   :unsigned-int))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defcfun* (%to-phys "comedi_to_phys") :double
   (data    lsampl-t)
   (range   :pointer)                    ;comedi_range *
