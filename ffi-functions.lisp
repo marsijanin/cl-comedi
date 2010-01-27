@@ -25,3 +25,24 @@
   (aref      :unsigned-int)
   (data      :pointer))                 ;lsampl_t *
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defsyscall (%get-maxdata "comedi_get_maxdata") lsampl-t
+  (device    :pointer)                  ;comedi_t *
+  (subdevice :unsigned-int)
+  (channel   :unsigned-int))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defsyscall (%get-range "comedi_get_range") :pointer
+  (device    :pointer)                  ;comedi_t *
+  (subdevice :unsigned-int)
+  (channel   :unsigned-int)
+  (range     :unsigned-int))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcfun* (%to-phys "comedi_to_phys") :double
+  (data    lsampl-t)
+  (range   :pointer)                    ;comedi_range *
+  (maxdata lsampl-t))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defcfun* (%from-phys "comedi_from_phys") lsampl-t
+  (data    :double)
+  (range   :pointer)                    ;comedi_range *
+  (maxdata lsampl-t))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
