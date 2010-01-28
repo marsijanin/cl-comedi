@@ -54,3 +54,7 @@
   (range   :pointer)                    ;comedi_range *
   (maxdata lsampl-t))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defsyscall (%do-instructions-list "comedi_do_insnlist") :int
+  (device :pointer)                     ;comedi_t *
+  (list   :pointer))                    ;comedi_insnlist *
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
