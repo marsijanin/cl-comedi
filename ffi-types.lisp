@@ -7,8 +7,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (ctype lsampl-t "lsampl_t")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(constant (aref-ground "AREF_GROUND"))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (cstruct range "comedi_range"
   (min  "min"  :type :double)
   (max  "max"  :type :double)
@@ -29,11 +27,27 @@
    :documentation "wait a specified number of nanoseconds"))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (cstruct instructions "comedi_insn"
-  #|(instructions "insn"      :type :unsigned-int)|#
-  (instructions "insn"      :type instructions-types)
-  (n             "n"        :type :unsigned-int)
-  (data          "data"     :type :pointer)
-  (subdevice     "subdev"   :type :unsigned-int)
-  (channels      "chanspec" :type :unsigned-int)
-  (unused        "unused"   :type :pointer))
+  (instructions "insn"     :type instructions-types)
+  (n            "n"        :type :unsigned-int)
+  (data         "data"     :type :pointer) ;lsampl_t *
+  (subdevice    "subdev"   :type :unsigned-int)
+  (channels     "chanspec" :type :unsigned-int)
+  (unused       "unused"   :type :pointer))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(cstruct instructions-list "comedi_insnlist"
+  (instructions-number     "n_insns" :type :unsigned-int)
+  (pointer-to-instructions "insns"   :type :pointer)) ;comedi_insn  *
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(constantenum (aref :define-constants t)
+  ((:ground "AREF_GROUND")
+   :documentation "For inputs/outputs referenced to ground.")
+  ((:common "AREF_COMMON")
+   :documentation "For a `common` reference (the low inputs
+                   of all the channels are tied together, but are isolated
+                   from ground).")
+  ((:diff "AREF_DIFF")
+   :documentation "For differential inputs/outputs.")
+  ((:other "AREF_OTHER")
+   :documentation "For any reference that does not fit
+                   into the above categories."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
