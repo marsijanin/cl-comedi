@@ -39,3 +39,30 @@
             channels (cr-pack chan range aref-keyword))
       pointer)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defmacro with-instructions-list ((list-var &rest instructions) &body body)
+  "Example:
+   (let ((a (make-array 10                                      
+                        :element-type '(unsigned-byte 32))))    
+     (with-pointer-to-vector-data (p a)                         
+       (with-instructions-list (l (:read :data-pointer p))      
+         (with-comedi-device-pointer (dev \"/dev/comedi0\")       
+           (%do-instructions-list dev l)                        
+           a))))                                                
+   ==> some readed data
+  "
+  (alexandria:with-gensyms (instructions-array )
+    (let ((length (length instructions)))
+      `(with-foreign-objects ((,instructions-array 'instructions ,length)
+                              (,list-var           'instructions-list))
+         ,@(loop
+              :for instruction :in    instructions
+              :as  offset      :below length
+              :as  pointer     :=     `(mem-aref ,instructions-array 
+                                                 'instructions ,offset)
+              :collect `(setup-instructions-pointer ,pointer ,@instruction))
+         (with-foreign-slots ((instructions-number pointer-to-instructions)
+                              ,list-var instructions-list)
+           (setf instructions-number     ,length 
+                 pointer-to-instructions ,instructions-array)
+           ,@body)))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
