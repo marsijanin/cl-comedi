@@ -12,5 +12,6 @@
   :serial t 
   :components ((:file "pkgdcl")
                (cffi-grovel:grovel-file "ffi-types")
-               (:file "ffi-functions")))
+               (:file "ffi-functions")
+               (:file "comedi")))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
