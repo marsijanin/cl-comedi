@@ -51,3 +51,21 @@
    :documentation "For any reference that does not fit
                    into the above categories."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(cstruct command "comedi_cmd"
+  (subdev                 "subdev"         :type :unsigned-int)
+  (flags                  "flags"          :type :unsigned-int)
+  (start-source           "start_src"      :type :unsigned-int)
+  (start-argument         "start_arg"      :type :unsigned-int)
+  (scannig-begin-source   "scan_begin_src" :type :unsigned-int)
+  (scannig-begin-argument "scan_begin_arg" :type :unsigned-int)
+  (convert-source         "convert_src"    :type :unsigned-int)
+  (convert-argument       "convert_arg"    :type :unsigned-int)
+  (scannig-end-source     "scan_end_src"   :type :unsigned-int)
+  (scannig-end-argument   "scan_end_arg"   :type :unsigned-int)
+  (stop-source            "stop_src"       :type :unsigned-int)
+  (stop-argument          "stop_arg"       :type :unsigned-int)
+  (channels-list          "chanlist"       :type :pointer)
+  (channels-list-length   "chanlist_len"   :type :unsigned-int)
+  (data                   "data"           :type :pointer) ;lsampl_t *
+  (data-length            "data_len"       :type :pointer))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
