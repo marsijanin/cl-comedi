@@ -11,6 +11,8 @@
    #:lsample-t
    #:aref-ground
    #:range
+   #:instructions
+   #:command
    ;; C functions wrapers:
    #:%open
    #:%close
@@ -20,7 +22,9 @@
    #:%get-n-ranges
    #:%to-phys
    #:%from-phys
+   #:%do-instructions-list
    ;; Some more lispish stuff:
    #:with-comedi-device-pointer
-   #:get-range))
+   #:get-range
+   #:with-instructions-list))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
