@@ -18,3 +18,24 @@
 (defun get-range (device subdevice channel range)
   (make-instance 'range :pointer (%get-range device subdevice channel range)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Some more lispish wrappers around struct comedi_insnlist
+(defun setup-instructions-pointer (pointer instructions-keyword &key
+                                   (number 1)
+                                   data-pointer
+                                   (subdev 0)
+                                   (chan 0)
+                                   (range 0)
+                                   (aref-keyword :ground))
+  (labels ((cr-pack (channels range aref)
+             (logior (ash (logand (foreign-enum-value 'aref aref)  #x03) 24)
+                     (ash (logand range #xff) 16)
+                     channels)))
+    (with-foreign-slots ((instructions n data subdevice channels)
+                         pointer instructions)
+      (setf instructions instructions-keyword
+            n number
+            data data-pointer
+            subdevice subdev
+            channels (cr-pack chan range aref-keyword))
+      pointer)))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
