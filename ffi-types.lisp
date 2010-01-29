@@ -69,3 +69,46 @@
   (data                   "data"           :type :pointer) ;lsampl_t *
   (data-length            "data_len"       :type :pointer))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; cffi manual says what cenum element spec has the same syntax as
+;; constantenum i.e. `:optional` &key parameter can be specified. But,
+;; if I will replace `constantenum` to the `cenum` in the form below,
+;; I will receive an grovel-file syntax error. So I'm using `constantenum`
+;; which also givese no warnings unlike `cenum`.
+(constantenum (subdevice-type :define-constants t)
+  ((:unused  "COMEDI_SUBD_UNUSED")
+   :documentation "unused by driver"
+   :optional t)
+  ((:ai      "COMEDI_SUBD_AI")
+   :documentation "analog input"
+   :optional t)
+  ((:ao      "COMEDI_SUBD_AO")
+   :documentation "analog output"
+   :optional t)
+  ((:di      "COMEDI_SUBD_DI")
+   :documentation "digital input"
+   :optional t)
+  ((:do      "COMEDI_SUBD_DO")
+   :documentation "digital output"
+   :optional t)
+  ((:dio     "COMEDI_SUBD_DIO")
+   :documentation "digital input/output"
+   :optional t)
+  ((:counter "COMEDI_SUBD_COUNTER")
+   :documentation "counter"
+   :optional t)
+  ((:timer   "COMEDI_SUBD_TIMER")
+   :documentation "timer"
+   :optional t)
+  ((:memory  "COMEDI_SUBD_MEMORY")
+   :documentation "memory, EEPROM, DPRAM"
+   :optional t)
+  ((:calib   "COMEDI_SUBD_CALIB")
+   :documentation "calibration DACs"
+   :optional t)
+  ((:proc    "COMEDI_SUBD_PROC")
+   :documentation "processor, DSP"
+   :optional t)
+  ((:serial  "COMEDI_SUBD_SERIAL")
+   :documentation "serial IO"
+   :optional t))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
