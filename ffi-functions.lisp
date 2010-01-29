@@ -58,3 +58,7 @@
   (device :pointer)                     ;comedi_t *
   (list   :pointer))                    ;comedi_insnlist *
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defsyscall  (%command "comedi_command") :int
+  (device  :pointer)                    ;comedi_t *
+  (command :pointer))                   ;comedi_cmd *
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
