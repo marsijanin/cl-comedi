@@ -53,24 +53,6 @@
    :documentation "For any reference that does not fit
                    into the above categories."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(cstruct command "comedi_cmd"
-  (subdev                 "subdev"         :type :unsigned-int)
-  (flags                  "flags"          :type :unsigned-int)
-  (start-source           "start_src"      :type :unsigned-int)
-  (start-argument         "start_arg"      :type :unsigned-int)
-  (scannig-begin-source   "scan_begin_src" :type :unsigned-int)
-  (scannig-begin-argument "scan_begin_arg" :type :unsigned-int)
-  (convert-source         "convert_src"    :type :unsigned-int)
-  (convert-argument       "convert_arg"    :type :unsigned-int)
-  (scannig-end-source     "scan_end_src"   :type :unsigned-int)
-  (scannig-end-argument   "scan_end_arg"   :type :unsigned-int)
-  (stop-source            "stop_src"       :type :unsigned-int)
-  (stop-argument          "stop_arg"       :type :unsigned-int)
-  (channels-list          "chanlist"       :type :pointer)
-  (channels-list-length   "chanlist_len"   :type :unsigned-int)
-  (data                   "data"           :type :pointer) ;lsampl_t *
-  (data-length            "data_len"       :type :pointer))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; cffi manual says what cenum element spec has the same syntax as
 ;; constantenum i.e. `:optional` &key parameter can be specified. But,
 ;; if I will replace `constantenum` to the `cenum` in the form below,
@@ -155,4 +137,22 @@
                    (This event source is reserved for future use.)")
   ((:trig-other "TRIG_OTHER")
    :documentation "Driver specific event trigger."))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(cstruct command "comedi_cmd"
+  (subdev                 "subdev"         :type :unsigned-int)
+  (flags                  "flags"          :type :unsigned-int)
+  (start-source           "start_src"      :type trigger)
+  (start-argument         "start_arg"      :type :unsigned-int)
+  (scannig-begin-source   "scan_begin_src" :type trigger)
+  (scannig-begin-argument "scan_begin_arg" :type :unsigned-int)
+  (convert-source         "convert_src"    :type trigger)
+  (convert-argument       "convert_arg"    :type :unsigned-int)
+  (scannig-end-source     "scan_end_src"   :type trigger)
+  (scannig-end-argument   "scan_end_arg"   :type :unsigned-int)
+  (stop-source            "stop_src"       :type trigger)
+  (stop-argument          "stop_arg"       :type :unsigned-int)
+  (channels-list          "chanlist"       :type :pointer)
+  (channels-list-length   "chanlist_len"   :type :unsigned-int)
+  (data                   "data"           :type :pointer) ;lsampl_t *
+  (data-length            "data_len"       :type :pointer))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
