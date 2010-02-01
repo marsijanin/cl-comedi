@@ -62,3 +62,8 @@
   (device  :pointer)                    ;comedi_t *
   (command :pointer))                   ;comedi_cmd *
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defsyscall (%find-subdevice-by-type "comedi_find_subdevice_by_type") :int
+  (device          :pointer)            ;comedi_t *
+  (type            subdevice-type)
+  (start-subdevice :unsigned-int))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
