@@ -13,18 +13,20 @@
   (unit "unit" :type :unsigned-int))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (constantenum (instructions-types :define-constants t)
-  ((:read "INSN_READ")
+  ((:insn-read "INSN_READ")
    :documentation "read values from an input channel")
-  ((:write "INSN_WRITE")
+  ((:insn-write "INSN_WRITE")
    :documentation "write values to an output channel")
-  ((:bits "INSN_BITS")
+  ((:insn-bits "INSN_BITS")
    :documentation "read/write values on multiple digital I/O channels")
-  ((:config "INSN_CONFIG")
+  ((:insn-config "INSN_CONFIG")
    :documentation "configure a subdevice")
-  ((:gtod "INSN_GTOD")
+  ((:insn-gtod "INSN_GTOD")
    :documentation "read a timestamp, identical to gettimeofday()")
-  ((:wait "INSN_WAIT")
-   :documentation "wait a specified number of nanoseconds"))
+  ((:insn-wait "INSN_WAIT")
+   :documentation "wait a specified number of nanoseconds")
+  ((:insn-inttrig "INSN_INTTRIG")
+   :documentation "Its execution causes an internal triggering event."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (cstruct instructions "comedi_insn"
   (instructions "insn"     :type instructions-types)
@@ -39,15 +41,15 @@
   (pointer-to-instructions "insns"   :type :pointer)) ;comedi_insn  *
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (constantenum (aref :define-constants t)
-  ((:ground "AREF_GROUND")
+  ((:aref-ground "AREF_GROUND")
    :documentation "For inputs/outputs referenced to ground.")
-  ((:common "AREF_COMMON")
+  ((:aref-common "AREF_COMMON")
    :documentation "For a `common` reference (the low inputs
                    of all the channels are tied together, but are isolated
                    from ground).")
-  ((:diff "AREF_DIFF")
+  ((:aref-diff "AREF_DIFF")
    :documentation "For differential inputs/outputs.")
-  ((:other "AREF_OTHER")
+  ((:aref-other "AREF_OTHER")
    :documentation "For any reference that does not fit
                    into the above categories."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -74,41 +76,83 @@
 ;; if I will replace `constantenum` to the `cenum` in the form below,
 ;; I will receive an grovel-file syntax error. So I'm using `constantenum`
 ;; which also givese no warnings unlike `cenum`.
-(constantenum (subdevice-type :define-constants t)
-  ((:unused  "COMEDI_SUBD_UNUSED")
+(constantenum (subdevice-type  :define-constants t)
+  ((:subd-unused  "COMEDI_SUBD_UNUSED")
    :documentation "unused by driver"
    :optional t)
-  ((:ai      "COMEDI_SUBD_AI")
+  ((:subd-ai      "COMEDI_SUBD_AI")
    :documentation "analog input"
    :optional t)
-  ((:ao      "COMEDI_SUBD_AO")
+  ((:subd-ao      "COMEDI_SUBD_AO")
    :documentation "analog output"
    :optional t)
-  ((:di      "COMEDI_SUBD_DI")
+  ((:subd-di      "COMEDI_SUBD_DI")
    :documentation "digital input"
    :optional t)
-  ((:do      "COMEDI_SUBD_DO")
+  ((:subd-do      "COMEDI_SUBD_DO")
    :documentation "digital output"
    :optional t)
-  ((:dio     "COMEDI_SUBD_DIO")
+  ((:subd-dio     "COMEDI_SUBD_DIO")
    :documentation "digital input/output"
    :optional t)
-  ((:counter "COMEDI_SUBD_COUNTER")
+  ((:subd-counter "COMEDI_SUBD_COUNTER")
    :documentation "counter"
    :optional t)
-  ((:timer   "COMEDI_SUBD_TIMER")
+  ((:subd-timer   "COMEDI_SUBD_TIMER")
    :documentation "timer"
    :optional t)
-  ((:memory  "COMEDI_SUBD_MEMORY")
+  ((:subd-memory  "COMEDI_SUBD_MEMORY")
    :documentation "memory, EEPROM, DPRAM"
    :optional t)
-  ((:calib   "COMEDI_SUBD_CALIB")
+  ((:subd-calib   "COMEDI_SUBD_CALIB")
    :documentation "calibration DACs"
    :optional t)
-  ((:proc    "COMEDI_SUBD_PROC")
+  ((:subd-proc    "COMEDI_SUBD_PROC")
    :documentation "processor, DSP"
    :optional t)
-  ((:serial  "COMEDI_SUBD_SERIAL")
+  ((:subd-serial  "COMEDI_SUBD_SERIAL")
    :documentation "serial IO"
    :optional t))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(constantenum (trigger :define-constants t)
+  ((:trig-now "TRIG_NOW")
+   :documentation "The start_src event occurs start_arg nanoseconds after
+                   the comedi_cmd is called. Currently, only start_arg=0
+                   is supported.
+                   All conversion events in a scan occur simultaneously.")
+  ((:trig-follow "TRIG_FOLLOW")
+   :documentation "(For an output device.) The start_src event occurs when
+                   data is written to the buffer.
+                   The `scan_begin` event occurs immediately after
+                   a `scan_end` event occurs.")
+  ((:trig-ext "TRIG_EXT")
+   :documentation "The start event occurs when an external trigger signal
+                   occurs; e.g., a rising edge of a digital line.
+                   `start_arg` chooses the particular digital line.
+                   The `scan_begin` event occurs when an external trigger
+                   signal occurs; e.g., a rising edge of a digital line.
+                   `scan_begin_arg` chooses the particular digital line.
+                   The conversion events occur when an external trigger signal
+                   occurs, e.g., a rising edge of a digital line.
+                   `conavert_arg` chooses the particular digital line.")
+  ((:trig-int "TRIG_INT")
+   :documentation "The start event occurs on a Comedi internal signal,
+                   which is typically caused by an `INSN_INTTRIG` instruction.")
+  ((:trig-timer "TRIG_TIMER")
+   :documentation "`scan_begin` events occur periodically.
+                   The time between scan_begin events is `convert_arg`
+                   nanoseconds.
+                   The conversion events occur periodically.
+                   The time between convert events is `convert_arg`
+                   nanoseconds.")
+  ((:trig-count "TRIG_COUNT")
+   :documentation "Stop the acquisition after stop_arg scans.")
+  ((:trig-none "TRIG_NONE")
+   :documentation "Perform continuous acquisition,
+                   until stopped using `comedi_cancel()`.")
+  ((:trig-time "TRIG_TIME")
+   :documentation "Cause an event to occur at a particular tim
+                   (This event source is reserved for future use.)")
+  ((:trig-other "TRIG_OTHER")
+   :documentation "Driver specific event trigger."))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
