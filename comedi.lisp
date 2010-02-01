@@ -25,7 +25,7 @@
                                    (subdev 0)
                                    (chan 0)
                                    (range 0)
-                                   (aref-keyword :ground))
+                                   (aref-keyword :aref-ground))
   (labels ((cr-pack (channels range aref)
              (logior (ash (logand (foreign-enum-value 'aref aref)  #x03) 24)
                      (ash (logand range #xff) 16)
@@ -44,7 +44,7 @@
    (let ((a (make-array 10                                      
                         :element-type '(unsigned-byte 32))))    
      (with-pointer-to-vector-data (p a)                         
-       (with-instructions-list (l (:read :data-pointer p))      
+       (with-instructions-list (l (:insn-read :data-pointer p))
          (with-comedi-device-pointer (dev \"/dev/comedi0\")       
            (%do-instructions-list dev l)                        
            a))))                                                
