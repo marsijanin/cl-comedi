@@ -97,6 +97,7 @@
    :optional t))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (constantenum (trigger :define-constants t)
+  ;; Command trigger events
   ((:trig-now "TRIG_NOW")
    :documentation "The start_src event occurs start_arg nanoseconds after
                    the comedi_cmd is called. Currently, only start_arg=0
@@ -136,11 +137,47 @@
    :documentation "Cause an event to occur at a particular tim
                    (This event source is reserved for future use.)")
   ((:trig-other "TRIG_OTHER")
-   :documentation "Driver specific event trigger."))
+   :documentation "Driver specific event trigger.")
+  ;; Command flags (questions signs are not mine --
+  ;; I'm just reproducing corresponding parts of the comedi manual)
+  ((:trig-rt "TRIG_RT")
+   :documentation "Ask the driver to use a hard real-time interrupt handler.")
+  ((:TRIG-WAKE-EOS "TRIG_WAKE_EOS")
+   :documentation "`EOS` means for `End of Scan`.")
+  ((:trig-round-nearest "TRIG_ROUND_NEAREST")
+   :documentation "Round to nearest supported timing period, the default.")
+ ((:trig-round-down "TRIG_ROUND_DOWN")
+  :documentation "Round period down.")
+ ((:trig-round-up "TRIG_ROUND_UP")
+  :documentation "Round period up.")
+ ((:trig-round-up-next "TRIG_ROUND_UP_NEXT")
+  :documentation "This one doesn't do anything,
+                  and I don't know what it was intended to do...?")
+ ((:trig-dither "TRIG_DITHER")
+  :documentation "Enable dithering?")
+ ((:trig-deglitch "TRIG_DEGLITCH")
+  :documentation "Enable deglitching?")
+ ((:trig-write "TRIG_WRITE")
+  :documentation "Write to bidirectional devices.")
+ ((:trig-bogus "TRIG_BOGUS")
+  :documentation "Do the motions?")
+ ((:trig-config "TRIG_CONFIG")
+  :documentation "Perform configuration, not triggering.")
+ ;; CMDF_* constants: some of them are used to #define some TRIG_* constants
+ ;; values, some not. So I'm define CMDF_* constants as part of the trigger
+ ;; constantenum case both are widely used as parameters for struct comedi_cmd
+ ((:cmdf-priority "CMDF_PRIORITY") :documentation "Same, as trig-rt")
+ ((:cmdf-write    "CMDF_WRITE"))
+ ((:cmdf-rawdata  "CMDF_RAWDATA")))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (cstruct command "comedi_cmd"
+  ;; Cffi manuals dos not pay special attention on this, but
+  ;; after specifying cenum type instead of integer foreign type
+  ;; for foreign slots and function parameters you still can pass
+  ;; to this functions integer values as well, as keywords:
+  ;; i.e. `(foreign-foo 1)` should work as well ass `(foreign-foo :value1)`
   (subdev                 "subdev"         :type :unsigned-int)
-  (flags                  "flags"          :type :unsigned-int)
+  (flags                  "flags"          :type trigger)
   (start-source           "start_src"      :type trigger)
   (start-argument         "start_arg"      :type :unsigned-int)
   (scannig-begin-source   "scan_begin_src" :type trigger)
